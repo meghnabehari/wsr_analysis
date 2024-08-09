@@ -21,9 +21,9 @@ rcParams['font.size'] = 11
 # }
 
 folders = {
-    'Baseline 1: Independent': 'hw_baseline_loc_3',
-    'Baseline 2: Oracle': 'hw_env_1_baseline_2_loc_3',
-    'WSR': 'hw_wsr_loc_3'
+    'Baseline 1: Independent': 'hw_baseline_consolodated',
+    'Baseline 2: Oracle': 'hw_env_1_baseline_2_consolodated',
+    'WSR': 'hw_wsr_consolodated'
 }
 
 colors = {
@@ -79,20 +79,42 @@ for name, folder in folders.items():
     results[name] = process_folder(folder)
 
 # Plot coverage percent vs average coverage overlap with standard deviation shading for each dataset
+# plt.figure(figsize=(10, 6))
+
+# for name, df in results.items():
+#     mean_capped = np.minimum(df['mean'], 100)
+#     std_capped = np.minimum(df['std'], 100 - mean_capped)
+    
+#     plt.plot(df['coverage_percent'], mean_capped, label=f'{name}', color=colors[name], linewidth=2)
+#     plt.fill_between(df['coverage_percent'], mean_capped - std_capped, mean_capped + std_capped, color=colors[name], alpha=0.2)
+
+# plt.xlabel('Total Map Coverage Percent')
+# plt.ylabel('Average Coverage Overlap (%)')
+# plt.title('Robot Map Coverage Overlap, Hardware Loc 3')
+# plt.legend()
+# plt.grid(axis='y')
+# plt.xticks()
+# # plt.ylim(0, 100) 
+# plt.show()
 plt.figure(figsize=(10, 6))
 
 for name, df in results.items():
-    mean_capped = np.minimum(df['mean'], 100)
-    std_capped = np.minimum(df['std'], 100 - mean_capped)
-    
-    plt.plot(df['coverage_percent'], mean_capped, label=f'{name}', color=colors[name], linewidth=2)
-    plt.fill_between(df['coverage_percent'], mean_capped - std_capped, mean_capped + std_capped, color=colors[name], alpha=0.2)
+    # Convert the pandas Series to numpy arrays before applying np.minimum
+    mean_values = df['mean'].values
+    std_values = df['std'].values
+
+    # Ensure single-dimensional arrays for np.minimum
+    mean_capped = np.minimum(mean_values, 100)
+    std_capped = np.minimum(std_values, 100 - mean_capped)
+
+    # Use fill_between with NumPy arrays
+    plt.plot(df['coverage_percent'].values, mean_capped, label=f'{name}', color=colors[name], linewidth=2)
+    plt.fill_between(df['coverage_percent'].values, mean_capped - std_capped, mean_capped + std_capped, color=colors[name], alpha=0.2)
 
 plt.xlabel('Total Map Coverage Percent')
 plt.ylabel('Average Coverage Overlap (%)')
-plt.title('Robot Map Coverage Overlap, Hardware Loc 3')
-plt.legend()
-plt.grid(axis='y')
+plt.title('Robot Map Coverage Overlap')
+# plt.legend()
+# plt.grid(axis='y')
 plt.xticks()
-# plt.ylim(0, 100) 
 plt.show()

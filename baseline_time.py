@@ -78,17 +78,11 @@ wsr_line = '#6E954B'
 baseline_2 = '#5B838F'
 manual_termination = '#7EA28A'
 
-# plt.plot(avg_coverage_wsr, time_points_wsr, color=wsr_line, linewidth='2.5', label='WSR')
-
 plt.plot(time_points_wsr, avg_coverage_wsr, color=wsr_line, linewidth='2.5', label='WSR')
 plt.fill_between(time_points_wsr, avg_coverage_wsr - std_coverage_wsr, avg_coverage_wsr + std_coverage_wsr, color=wsr_line, alpha=0.2)
 
-# plt.plot( avg_coverage_baseline_1, time_points_baseline_1, linewidth='2.5', color=baseline_1, label='Baseline 1: Independent')
-
 plt.plot(time_points_baseline_1, avg_coverage_baseline_1, linewidth='2.5', color=baseline_1, label='Baseline 1: Independent')
 plt.fill_between(time_points_baseline_1, avg_coverage_baseline_1 - std_coverage_baseline_1, avg_coverage_baseline_1 + std_coverage_baseline_1, color=baseline_1, alpha=0.2)
-
-# plt.plot(avg_coverage_baseline_2, time_points_baseline_2, linewidth='2.5', color=baseline_2, label='Baseline 2: Oracle')
 
 plt.plot(time_points_baseline_2, avg_coverage_baseline_2, linewidth='2.5', color=baseline_2, label='Baseline 2: Oracle')
 plt.fill_between(time_points_baseline_2, avg_coverage_baseline_2 - std_coverage_baseline_2, avg_coverage_baseline_2 + std_coverage_baseline_2, color=baseline_2, alpha=0.2)
@@ -97,12 +91,17 @@ plt.scatter([time_points_wsr[-1]], [avg_coverage_wsr[-1]], color='green', s=60, 
 plt.scatter([time_points_baseline_1[-1]], [avg_coverage_baseline_1[-1]], s=60, color='red', edgecolor='black', zorder=7, label="Manual Termination, Baseline 1")
 plt.scatter([time_points_baseline_2[-1]], [avg_coverage_baseline_2[-1]], s=60, color='blue', edgecolor='black', zorder=7, label="Manual Termination, Baseline 2")
 
+# Add vertical dashed lines from termination points to the x-axis
+plt.axvline(x=time_points_wsr[-1], ymin=0, ymax=avg_coverage_wsr[-1]/100, color='green', linestyle='--', linewidth=2)
+plt.axvline(x=time_points_baseline_1[-1], ymin=0, ymax=avg_coverage_baseline_1[-1]/100, color='red', linestyle='--', linewidth=2)
+plt.axvline(x=time_points_baseline_2[-1], ymin=0, ymax=avg_coverage_baseline_2[-1]/100, color='blue', linestyle='--', linewidth=2)
+
 plt.xlabel('Time Elapsed (s)')
 plt.ylabel('Map Coverage Percent')
-plt.title('Map Coverage For Each Baseline, Hardware')
-plt.legend(loc='lower right')
+plt.title('Map Coverage For Each Baseline')
+# plt.legend(loc='lower right')
 plt.yticks(np.arange(0, 101, 10)) 
-plt.grid(axis='y')
+# plt.grid(axis='y')
 plt.xticks()
 plt.ylim(0, 100) 
 plt.show()

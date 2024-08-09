@@ -90,8 +90,8 @@ def calculate_average_coverage(main_folder, failure_folder, failure_column):
 
 
 # Calculate plot values for graph
-wsr_times, wsr_coverage, wsr_std_dev, wsr_failure_time, wsr_terminating_coverage, wsr_avg_termination_time = calculate_average_coverage('wsr_failure/main', 'wsr_failure/failure', 'Failure Coverage (%)')
-manual_times, manual_coverage, manual_std_dev, manual_failure_time, manual_terminating_coverage, manual_avg_termination_time = calculate_average_coverage('manual_failure/main', 'manual_failure/failure', 'Manual Failure Coverage (%)')
+wsr_times, wsr_coverage, wsr_std_dev, wsr_failure_time, wsr_terminating_coverage, wsr_avg_termination_time = calculate_average_coverage('wsr_failure_late/main', 'wsr_failure_late/failure', 'Failure Coverage (%)')
+manual_times, manual_coverage, manual_std_dev, manual_failure_time, manual_terminating_coverage, manual_avg_termination_time = calculate_average_coverage('manual_failure_late/main', 'manual_failure_late/failure', 'Manual Failure Coverage (%)')
 
 # PLOTTING
 

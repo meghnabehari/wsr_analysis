@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Base directory structures
 base_dir_slow_baseline = "slow_baseline"
@@ -56,15 +57,34 @@ std_dev_far_wsr_slow = pd.Series(max_times_far_wsr_slow).std()
 
 # Plotting the result with different colors
 plt.figure(figsize=(10, 6))
-categories = ['Divide and Conquer Baseline', 'WSR']
+categories = ['Slow Baseline', 'Far WSR Slow']
 values = [average_max_time_slow_baseline, average_max_time_far_wsr_slow]
 error = [std_dev_slow_baseline, std_dev_far_wsr_slow]
 colors = ['#CD797D', '#6E954B']
 
-plt.bar(categories, values, yerr=error, capsize=5, width=0.4, color=colors)
+# Set width of each bar
+bar_width = 0.4
+
+# Set position of bars on x-axis
+r1 = np.arange(len(categories))
+r2 = [x + bar_width for x in r1]
+
+# Create bars
+plt.bar(r1, values, width=bar_width, color=colors[0], edgecolor='grey', label='Divide and Conquer Baseline', yerr=error, capsize=5)
+plt.bar(r2, values, width=bar_width, color=colors[1], edgecolor='grey', label='WSR', yerr=error, capsize=5)
+
+# Add xticks on the middle of the group bars
+plt.xlabel('Category', fontweight='bold')
+plt.xticks([r + bar_width / 2 for r in range(len(categories))], categories)
+
+# Add labels and title
 plt.ylabel('Time Elapsed')
 plt.title('Average Termination Time to Cover 95 Percent of the Map in a Slow Robot Failure Scenario')
+plt.legend()
+
+# Show plot
 plt.show()
 
+# Print results
 print("Average Maximum Time Elapsed (Slow Baseline):", average_max_time_slow_baseline)
 print("Average Maximum Time Elapsed (Far WSR Slow):", average_max_time_far_wsr_slow)
