@@ -140,21 +140,18 @@ plt.axvline(x=manual_failure_time, color=manual_failure_point_color, linestyle='
 plt.scatter([wsr_valid_times[-1]], [wsr_valid_coverage[-1]], color='green', s=60, edgecolor='black', zorder=5, label="WSR Termination")
 plt.scatter([manual_valid_times[-1]], [manual_valid_coverage[-1]], color='red', s=60, edgecolor='black', zorder=5, label="Manual Termination")
 
-# Add dashed line connecting the endpoints
-# plt.plot([wsr_valid_times[-1], manual_valid_times[-1]], 
-#          [wsr_valid_coverage[-1], manual_valid_coverage[-1]], 
-#          color='black', linestyle='--', linewidth=1)
+# Add horizontal lines connecting the endpoints to the y-axis
+# plt.hlines(y=wsr_valid_coverage[-1], xmin=0, xmax=wsr_valid_times[-1], colors='green', linestyles='dashed')
+# plt.hlines(y=manual_valid_coverage[-1], xmin=0, xmax=manual_valid_times[-1], colors='red', linestyles='dashed')
 
 plt.xlim(0, max(wsr_avg_termination_time, manual_avg_termination_time) + 5)
 plt.xlabel('Time Elapsed (s)')
 plt.ylabel('Merged Map Coverage Percent')
-plt.title('Map Coverage Recovery with Early Failure Points')
+plt.title('Map Coverage Recovery')
 
 plt.yticks(np.arange(0, 101, 10)) 
-plt.grid(axis='y')
 plt.xticks()
-
-plt.legend()
+plt.legend(loc='lower right')
 plt.show()
 
 print("WSR Average Terminating Merged_12_Coverage:", wsr_terminating_coverage)
