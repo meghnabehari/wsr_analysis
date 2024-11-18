@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 
-folders = ["2_1", "5_10", "10_20", "30_100"]
+folders = ["2_1_c", "5_10_c", "10_20_c", "30_1_c"]
 main_directory = ""
 rcParams['font.family'] = 'serif'
 rcParams['font.serif'] = ['Times New Roman'] 
@@ -81,7 +81,7 @@ colors = ["#F6B379", "#CD797D", "#A1C185", "#5B838F",]
 for folder, color in zip(folders, colors):
     time_steps = np.arange(0, len(avg_coverage[folder]))
     # Parse the folder name for the label
-    num1, num2 = folder.split('_')
+    num1, num2, _ = folder.split('_')
     label = f"{num1} deg, {num2} cm"
     plt.plot(time_steps, avg_coverage[folder], label=label, color=color, linewidth=2.5)
     plt.fill_between(time_steps, 

@@ -90,8 +90,8 @@ def calculate_average_coverage(main_folder, failure_folder, failure_column):
 
 
 # Calculate plot values for graph
-wsr_times, wsr_coverage, wsr_std_dev, wsr_failure_time, wsr_terminating_coverage, wsr_avg_termination_time = calculate_average_coverage('wsr_failure_late/main', 'wsr_failure_late/failure', 'Failure Coverage (%)')
-manual_times, manual_coverage, manual_std_dev, manual_failure_time, manual_terminating_coverage, manual_avg_termination_time = calculate_average_coverage('manual_failure_late/main', 'manual_failure_late/failure', 'Manual Failure Coverage (%)')
+wsr_times, wsr_coverage, wsr_std_dev, wsr_failure_time, wsr_terminating_coverage, wsr_avg_termination_time = calculate_average_coverage('wsr_failure_consolidated/time', 'wsr_failure_consolidated/failure', 'Failure Coverage (%)')
+manual_times, manual_coverage, manual_std_dev, manual_failure_time, manual_terminating_coverage, manual_avg_termination_time = calculate_average_coverage('manual_failure_consolidated/time', 'manual_failure_consolidated/failure', 'Manual Failure Coverage (%)')
 
 # PLOTTING
 
@@ -116,7 +116,7 @@ plt.fill_between(wsr_valid_times,
                  np.array(wsr_valid_coverage) - np.array(wsr_valid_std_dev), 
                  np.array(wsr_valid_coverage) + np.array(wsr_valid_std_dev), 
                  color=wsr_line_color, 
-                 alpha=0.1)
+                 alpha=0.3)
 
 # Plot Manual data up to its average termination time
 manual_valid_indices = [i for i, t in enumerate(manual_times) if t <= manual_avg_termination_time]
@@ -131,18 +131,20 @@ plt.fill_between(manual_valid_times,
                  np.array(manual_valid_coverage) - np.array(manual_valid_std_dev), 
                  np.array(manual_valid_coverage) + np.array(manual_valid_std_dev), 
                  color=manual_line_color, 
-                 alpha=0.1)
+                 alpha=0.3)
 
-plt.axvline(x=wsr_failure_time,  color=wsr_failure_point_color, label='WSR Average 1 Robot Failure Point', alpha=0.9, linewidth=2)
-plt.axvline(x=manual_failure_time, color=manual_failure_point_color, linestyle='--',label='Manual Average 1 Robot Failure Point', alpha=0.9, linewidth=2)
+plt.axvline(x=wsr_failure_time,  color=wsr_failure_point_color, alpha=0.9, linewidth=2)
+plt.axvline(x=manual_failure_time, color=manual_failure_point_color, linestyle='--', alpha=0.9, linewidth=2)
 
 # Add end points
-plt.scatter([wsr_valid_times[-1]], [wsr_valid_coverage[-1]], color='green', s=60, edgecolor='black', zorder=5, label="WSR Termination")
-plt.scatter([manual_valid_times[-1]], [manual_valid_coverage[-1]], color='red', s=60, edgecolor='black', zorder=5, label="Manual Termination")
+plt.scatter([wsr_valid_times[-1]], [wsr_valid_coverage[-1]], color='green', s=60, edgecolor='black', zorder=5)
+plt.scatter([manual_valid_times[-1]], [manual_valid_coverage[-1]], color='red', s=60, edgecolor='black', zorder=5)
 
 # Add horizontal lines connecting the endpoints to the y-axis
-# plt.hlines(y=wsr_valid_coverage[-1], xmin=0, xmax=wsr_valid_times[-1], colors='green', linestyles='dashed')
-# plt.hlines(y=manual_valid_coverage[-1], xmin=0, xmax=manual_valid_times[-1], colors='red', linestyles='dashed')
+plt.hlines(y=wsr_valid_coverage[-1], xmin=0, xmax=wsr_valid_times[-1], colors='green', linestyles='dashed')
+plt.hlines(y=manual_valid_coverage[-1], xmin=0, xmax=manual_valid_times[-1], colors='red', linestyles='dashed')
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
 
 plt.xlim(0, max(wsr_avg_termination_time, manual_avg_termination_time) + 5)
 plt.xlabel('Time Elapsed (s)')

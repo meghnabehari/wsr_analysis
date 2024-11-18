@@ -5,7 +5,7 @@ import numpy as np
 
 # Base directory structures
 base_dir_slow_baseline = "slow_baseline"
-base_dir_far_wsr_slow = "far_wsr_slow"
+base_dir_far_wsr_slow = "far_wsr_slow_updated"
 subfolders = ["bottom", "upper_left", "upper_right"]
 time_folder = "time"
 
@@ -62,25 +62,13 @@ values = [average_max_time_slow_baseline, average_max_time_far_wsr_slow]
 error = [std_dev_slow_baseline, std_dev_far_wsr_slow]
 colors = ['#CD797D', '#6E954B']
 
-# Set width of each bar
-bar_width = 0.4
-
-# Set position of bars on x-axis
-r1 = np.arange(len(categories))
-r2 = [x + bar_width for x in r1]
-
-# Create bars
-plt.bar(r1, values, width=bar_width, color=colors[0], edgecolor='grey', label='Divide and Conquer Baseline', yerr=error, capsize=5)
-plt.bar(r2, values, width=bar_width, color=colors[1], edgecolor='grey', label='WSR', yerr=error, capsize=5)
-
-# Add xticks on the middle of the group bars
-plt.xlabel('Category', fontweight='bold')
-plt.xticks([r + bar_width / 2 for r in range(len(categories))], categories)
+# Create bars (single bar for each category)
+plt.bar(categories, values, color=colors, edgecolor='grey', yerr=error, capsize=5)
 
 # Add labels and title
+plt.xlabel('Category', fontweight='bold')
 plt.ylabel('Time Elapsed')
 plt.title('Average Termination Time to Cover 95 Percent of the Map in a Slow Robot Failure Scenario')
-plt.legend()
 
 # Show plot
 plt.show()

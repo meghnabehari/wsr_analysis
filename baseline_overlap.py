@@ -21,9 +21,9 @@ rcParams['font.size'] = 11
 # }
 
 folders = {
-    'Baseline 1: Independent': 'hw_baseline_consolodated',
-    'Baseline 2: Oracle': 'hw_env_1_baseline_2_consolodated',
-    'WSR': 'hw_wsr_consolodated'
+    'Baseline 1: Independent': 'baseline_1_near_far',
+    'Baseline 2: Oracle': 'baseline_2_near_far',
+    'WSR': 'wsr_near_far'
 }
 
 colors = {
@@ -113,7 +113,7 @@ for name, df in results.items():
 
 plt.xlabel('Total Map Coverage Percent')
 plt.ylabel('Average Coverage Overlap (%)')
-plt.title('Robot Map Coverage Overlap')
+plt.title('Robot Map Coverage Overlap, Consolidated')
 # plt.legend()
 # plt.grid(axis='y')
 plt.xticks()

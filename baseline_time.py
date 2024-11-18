@@ -51,7 +51,7 @@ def interpolate_coverage(data_frames, avg_term_time, avg_term_coverage):
         all_interpolated_coverage.append(interpolated_coverage)
 
     avg_interpolated_coverage = np.mean(all_interpolated_coverage, axis=0)
-    std_interpolated_coverage = np.std(all_interpolated_coverage, axxis=0)
+    std_interpolated_coverage = np.std(all_interpolated_coverage, axis=0)
     
     # Find the point where the average coverage reaches 90 or the average termination coverage, whichever is first
     for i in range(len(avg_interpolated_coverage)):
@@ -91,30 +91,17 @@ plt.scatter([time_points_wsr[-1]], [avg_coverage_wsr[-1]], color='green', s=60, 
 plt.scatter([time_points_baseline_1[-1]], [avg_coverage_baseline_1[-1]], s=60, color='red', edgecolor='black', zorder=7, label="Manual Termination, Baseline 1")
 plt.scatter([time_points_baseline_2[-1]], [avg_coverage_baseline_2[-1]], s=60, color='blue', edgecolor='black', zorder=7, label="Manual Termination, Baseline 2")
 
-<<<<<<< HEAD
 # Adding vertical lines
 plt.vlines(x=time_points_wsr[-1], ymin=0, ymax=avg_coverage_wsr[-1], colors='green', linestyles='dashed')
 plt.vlines(x=time_points_baseline_1[-1], ymin=0, ymax=avg_coverage_baseline_1[-1], colors='red', linestyles='dashed')
 plt.vlines(x=time_points_baseline_2[-1], ymin=0, ymax=avg_coverage_baseline_2[-1], colors='blue', linestyles='dashed')
-=======
-# Add vertical dashed lines from termination points to the x-axis
-plt.axvline(x=time_points_wsr[-1], ymin=0, ymax=avg_coverage_wsr[-1]/100, color='green', linestyle='--', linewidth=2)
-plt.axvline(x=time_points_baseline_1[-1], ymin=0, ymax=avg_coverage_baseline_1[-1]/100, color='red', linestyle='--', linewidth=2)
-plt.axvline(x=time_points_baseline_2[-1], ymin=0, ymax=avg_coverage_baseline_2[-1]/100, color='blue', linestyle='--', linewidth=2)
->>>>>>> 3af51432300bd3ea982137bab0df7dc5d2ab14c2
 
 plt.xlabel('Time Elapsed (s)')
 plt.ylabel('Map Coverage Percent')
-plt.title('Map Coverage For Each Baseline')
-<<<<<<< HEAD
-plt.yticks(np.arange(0, 101, 10)) 
-plt.ylim(0, 100)
-# plt.legend(loc='lower right')
-=======
+plt.title('Map Coverage For Each Baseline, Close')
 # plt.legend(loc='lower right')
 plt.yticks(np.arange(0, 101, 10)) 
 # plt.grid(axis='y')
 plt.xticks()
 plt.ylim(0, 100) 
->>>>>>> 3af51432300bd3ea982137bab0df7dc5d2ab14c2
 plt.show()

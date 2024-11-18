@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 
-folders = ["2_1", "5_10", "10_20", "30_100"]
+folders = ["2_1_c", "5_10_c", "10_20_c", "30_1_c"]
 main_directory = ""
 rcParams['font.family'] = 'serif'
 rcParams['font.serif'] = ['Times New Roman'] 
-rcParams['font.size'] = 12
+rcParams['font.size'] = 16
 
 completion_times = {}
 coverage_data = {}
@@ -112,7 +112,7 @@ plt.yticks(np.arange(0, 101, 10))
 
 plt.xlabel('WSR Noise Level', labelpad=20)  # Increase labelpad for more space
 plt.ylabel('Merged Map Coverage Percent at Termination Time')
-plt.title('Map Coverage at Termination Time with Varying WSR Noise')
+# plt.title('Map Coverage at Termination Time with Varying WSR Noise')
 
 plt.show()
 
