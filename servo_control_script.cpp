@@ -1,93 +1,46 @@
 #include "ros/ros.h"
-#include "dynamixel_position_control/MsgDynamixel.h"
-#include "dynamixel_msgs/JointState.h"
+#include "sensor_msgs/JointState.h"
+#include "std_msgs/Float64.h"
 
-#define GOAL_POS 0
-#define CURRENT_POS 1
-#define ERROR 2
-#define LOAD 3
-#define ERROR_POS 0.01
-#define ERROR_NEG -0.01
+float joint_angle = 0.0; // Current joint position (global for callback)
+const float target_position = 0.0; // Target servo position
 
-void motor_command(ros::Publisher dynamixel_publisher); // Command motor to move
-bool motor_init(); // Initialize motor variables
-
-struct Motor {
-    float motor_state[4]; // Motor states (goal position, current position, etc.)
-    int state;            // FSM state
-    bool moving;          // Indicates if the motor is still moving
-    dynamixel_position_control::MsgDynamixel msg;
-} MX28;
-
-// Initialize motor variables
-bool motor_init() {
-    MX28.state = 0; // Initial state
-    for (int i = 0; i < 4; i++) MX28.motor_state[i] = 0xff; // Reset motor states
-    MX28.moving = false;
-    MX28.msg.data = 0; // Start position at zero
-    return true;
-}
-
-// Callback for receiving current motor state
-void msgCallback(const dynamixel_msgs::JointState::ConstPtr& msg) {
-    MX28.motor_state[GOAL_POS] = msg->goal_pos;
-    MX28.motor_state[CURRENT_POS] = msg->current_pos;
-    MX28.motor_state[ERROR] = msg->error;
-    MX28.motor_state[LOAD] = msg->load;
-    MX28.moving = msg->is_moving;
+// Callback to read joint states
+void CallJointState(const sensor_msgs::JointState::ConstPtr& msg) {
+    joint_angle = msg->position[0]; // Assume index 0 corresponds to the servo joint
+    ROS_INFO("Current Position: %f", joint_angle);
 }
 
 int main(int argc, char** argv) {
-    ros::init(argc, argv, "dynamixel_zero_position");
+    ros::init(argc, argv, "set_servo_position");
     ros::NodeHandle nh;
 
-    if (!motor_init()) {
-        ROS_ERROR("Failed to initialize motor.");
-        return 0;
-    }
+    // Subscriber to joint states (adjust topic name if necessary)
+    ros::Subscriber joint_state_sub = nh.subscribe("/wsr_antenna_motor/joint_states", 10, CallJointState);
 
-    // Publisher for sending position commands
-    ros::Publisher dynamixel_publisher = nh.advertise<dynamixel_position_control::MsgDynamixel>("tilt_controller/command", 100);
+    // Publisher to command the servo (adjust topic name if necessary)
+    ros::Publisher servo_command_pub = nh.advertise<std_msgs::Float64>("/wsr_antenna_motor/command", 10);
 
-    // Subscriber for receiving motor state
-    ros::Subscriber dynamixel_subscriber = nh.subscribe("tilt_controller/state", 100, msgCallback);
-
-    ros::Rate loop_rate(10); // Set loop rate (10 Hz)
+    ros::Rate loop_rate(10); // 10 Hz loop rate
 
     while (ros::ok()) {
-        // Wait for callbacks
-        ros::spinOnce();
+        ros::spinOnce(); // Process callbacks
 
-        // Command motor to move toward position 0
-        motor_command(dynamixel_publisher);
-
-        // Stop the loop if the motor is at position 0
-        if (!MX28.moving && 
-            (MX28.motor_state[CURRENT_POS] >= -ERROR_POS) && 
-            (MX28.motor_state[CURRENT_POS] <= ERROR_POS)) {
-            ROS_INFO("Motor reached position 0. Stopping...");
+        // Check if the servo is already at the target position
+        if (fabs(joint_angle - target_position) <= 0.01) { // Error threshold
+            ROS_INFO("Servo reached target position: %f", target_position);
             break;
         }
+
+        // Publish the target position command
+        std_msgs::Float64 command_msg;
+        command_msg.data = target_position;
+        servo_command_pub.publish(command_msg);
+        ROS_INFO("Commanded servo to position: %f", target_position);
 
         loop_rate.sleep();
     }
 
+    ROS_INFO("Servo position set successfully.");
     return 0;
-}
-
-// Command motor to move toward position 0
-void motor_command(ros::Publisher dynamixel_publisher) {
-    if (MX28.state == 0) { // TX state
-        MX28.msg.data = 0.0; // Command position 0
-        dynamixel_publisher.publish(MX28.msg);
-        ROS_INFO("Commanded motor to position 0.");
-        MX28.state = 1; // Transition to RX state
-    } else if (MX28.state == 1) { // RX state
-        if ((MX28.motor_state[CURRENT_POS] >= -ERROR_POS) && 
-            (MX28.motor_state[CURRENT_POS] <= ERROR_POS)) {
-            ROS_INFO("Motor is at position 0.");
-        } else {
-            MX28.state = 0; // Return to TX state to re-send the command
-        }
-    }
 }
