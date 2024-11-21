@@ -36,9 +36,11 @@ int main(int argc, char** argv) {
         std_msgs::Float64 command_msg;
         command_msg.data = target_position;
         servo_command_pub.publish(command_msg);
-        ROS_INFO("Commanded servo to position: %f", target_position);
+        ROS_INFO("Servo to position: %f", target_position);
+		
 
         loop_rate.sleep();
+		
     }
 
     ROS_INFO("Servo position set successfully.");
